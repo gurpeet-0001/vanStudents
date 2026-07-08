@@ -12,7 +12,7 @@ import tokenVerification from "../middleware/tokenVerification.js";
 
 //goes to all students controllers
 router.get('/', tokenVerification ,getStudents);
-router.post('/', createStudent);
+router.post('/', tokenVerification, createStudent);
 router.get('/:id' ,tokenVerification, getStudentsById);
 router.post('/:id' , addStudentFee );
 router.put('/:id' , updateStudentFee);

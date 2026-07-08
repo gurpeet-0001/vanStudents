@@ -3,26 +3,28 @@ import supabase from '../config/db.js'
 
 export const getStudents = async (req, res) => {
     const data = await supabase.from('Students')
-        .select('*')
-        .eq('phoneNumber', req.user.phoneNumber)
+    .select('*')
+    .eq('phoneNumber', req.user.parentNumber)
+    res.status(200).send(data.data)
 
-    res.send(data)
+
 }
 
 export const createStudent = async (req, res) => {
-
-    const { phoneNumber, password } = req.body;
-    const { data, error } = await supabase.from('Students')
-        .insert({
-            'phoneNumber': phoneNumber,
-            'password': password
-        })
-
-    if (error) {
-        res.status(404).json({ 'message': 'Error creating new user: ' + error });
+    try {
+        if (req.user.role == 'admin') {
+            const { phoneNumber, password } = req.body;
+            const { data, error } = await supabase.from('Students')
+                .insert({
+                    'phoneNumber': phoneNumber,
+                    'password': password
+                })
+            return res.status(200).json({ 'message': 'User Created successfully' })
+        }
+        res.status(404).json({ 'message': 'Wrong Role, Only admin can create new user' })
+    } catch (error) {
+        return res.status(404).json({ 'message': 'Error creating User : ' + error })
     }
-    res.json({ 'message': 'UserCreated' })
-
 }
 
 export const getStudentsById = async (req, res) => {

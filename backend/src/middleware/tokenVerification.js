@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken'
 
 const tokenVerification = (req, res, next) => {
-    const userToken = req.headers.token
+    const userToken = req.headers.authorization
     try {
         const decodedToken = jwt.verify(userToken,
             process.env.JWT_SECRET
@@ -10,7 +10,7 @@ const tokenVerification = (req, res, next) => {
         next();
     } catch (error) {
         console.log("wrong token" +error)
-        res.json({'message':'wrong token' , 'tokenwas':userToken})
+        res.status(404).json({'message':'Wrong or Expired token' })
     }
 
 

@@ -3,8 +3,9 @@ import { Routes, Route, Outlet } from "react-router-dom"
 import { Login } from "./pages/Login"
 import { Authlayout } from "./layout/Authlayout"
 import Mainlayout from "./layout/Mainlayout"
-import Home from "./pages/Home"
 import Protectedroute from "./layout/Protectedroute"
+import Adminlayout from "./layout/Adminlayout"
+import Dashboard from "./userComponents/Dashboard"
 
 export const App = () => {
   return (
@@ -14,11 +15,13 @@ export const App = () => {
           <Route path="/login" element={<Login />}></Route>
         </Route>
 
-        <Route element={<Protectedroute/>}>
+        <Route element={<Protectedroute />}>
           <Route element={<Mainlayout />}>
-            <Route path="/" element={<Home />}></Route>
+            <Route path="/" element={<Dashboard/>}></Route>
           </Route>
+          <Route path="/admin" element={<Adminlayout />}></Route>
         </Route>
+
       </Routes>
     </>
   )

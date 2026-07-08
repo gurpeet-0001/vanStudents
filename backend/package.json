@@ -2,20 +2,20 @@
   "name": "backend",
   "type": "module",
   "version": "1.0.0",
-  "description": "managing van students fee structure",
+  "description": "vanstudents backend",
   "main": "index.js",
   "scripts": {
     "dev": "nodemon ./src/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Gurpreet sandhu",
+  "author": "gurpreet sandhu",
   "license": "ISC",
   "dependencies": {
-    "@supabase/supabase-js": "^2.108.2",
-    "bcrypt": "^6.0.0",
-    "cors": "^2.8.6",
+    "@supabase/supabase-js": "^2.110.1",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
-    "nodemon": "^3.1.14"
+    "jsonwebtoken": "^9.0.3",
+    "nodemon": "^3.1.14",
+    "pg": "^8.22.0"
   }
 }

@@ -1,32 +1,22 @@
-import "./config/config.js"
-
-import express from "express";
-import { Router } from "express";
-import cors from "cors"
-//routers
-import test from './routes/test.js'
-import signup from './routes/signup.js'
-import login from './routes/login.js'
+//importing dependencies
+import express from 'express'
+//importing files
+import './config/env.js'
+import supabase from './config/db.js'
+import studentsRoute from './routes/studentsRoute.js'
+import authRoute from './routes/authRoute.js'
 
 const app = express();
+const port = process.env.PORT
 
 //middleware
-app.use(express.json())
-app.use(
-    cors({
-        origin: "http://localhost:5173"
-    }));
+app.use(express.json());
 
-//app use
-app.use('/api/', test)
-app.use('/api/signup', signup)
-app.use('/api/login', login)
+//routes
+app.use('/api/students/', studentsRoute);
+app.use('/api/auth/', authRoute )
 
-app.listen(process.env.PORT, (req, res) => {
-    console.log(
-        "server listening on port :" + process.env.PORT
-    )
+app.listen(port, (req,res)=>{
+    console.log('App listening at PORT : '+ port)
 })
-
-
 

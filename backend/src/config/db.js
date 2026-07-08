@@ -1,8 +1,7 @@
+import {createClient} from '@supabase/supabase-js'
 
-import {createClient} from "@supabase/supabase-js"
-export const supabase = createClient(process.env.VITE_SUPABASE_URL, process.env.VITE_SUPABASE_PUBLISHABLE_KEY);
-
-
-
+const db = createClient(process.env.VITE_SUPABASE_URL
+  ,process.env.VITE_SUPABASE_PUBLISHABLE_KEY);
 
 
+export default db

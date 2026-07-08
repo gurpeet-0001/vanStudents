@@ -1,21 +1,26 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios"
+import { useNavigate } from 'react-router-dom'
 
 export const Login = () => {
-    const [phoneNumber , setphoneNumber] = useState('');
-    const [password , setPassword] = useState('');
+  const [phoneNumber, setphoneNumber] = useState('');
+  const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
-    const handleLogin = async (e)=>{
-        e.preventDefault()
-        try {
-          const response = await axios.post("http://localhost:5001/api/login",{password : password , phoneNumber : phoneNumber})   
-          console.log(response.data) 
-        } catch (error) {
-          console.log('error postting data' + error)
-        }
-            
-        
+  const handleLogin = async (e) => {
+    e.preventDefault()
+    try {
+      const response = await axios.post('http://localhost:5001/api/login', { phoneNumber: phoneNumber, password: password });
+      console.log(response.data.message);
+      localStorage.setItem('token', response.data.token);
+      navigate('/');
+      return
+    } catch (error) {
+      return console.log('error : ' + error);
     }
+
+
+  }
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="w-full max-w-sm bg-white p-8 rounded-xl shadow-lg">
@@ -27,10 +32,10 @@ export const Login = () => {
               Phone Number
             </label>
             <input
-              type="text"
+              type="number"
               placeholder="Enter your phone number"
               className="w-full border border-gray-300 rounded-lg px-4 py-2 outline-none focus:ring-2 focus:ring-blue-500"
-              onChange={(e)=>(setphoneNumber(e.target.value))}
+              onChange={(e) => (setphoneNumber(e.target.value))}
             />
           </div>
 
@@ -42,7 +47,7 @@ export const Login = () => {
               type="password"
               placeholder="Enter your password"
               className="w-full border border-gray-300 rounded-lg px-4 py-2 outline-none focus:ring-2 focus:ring-blue-500"
-              onChange={(e)=>(setPassword(e.target.value))}
+              onChange={(e) => (setPassword(e.target.value))}
             />
           </div>
 

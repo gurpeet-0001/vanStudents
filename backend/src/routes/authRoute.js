@@ -1,9 +1,10 @@
 import e, { Router } from "express";
 import jwt from 'jsonwebtoken'
 import supabase from '../config/db.js'
+import tokenVerification from "../middleware/tokenVerification.js";
 const router = Router();
 
-router.post('/', async (req, res) => {
+router.post('/login', async (req, res) => {
     try {
         const { parentNumber, password } = req.body
         const { data, error } = await supabase.from('Parents')
@@ -22,7 +23,22 @@ router.post('/', async (req, res) => {
     } catch (error) {
         res.send({ 'message': 'error making token : ' + error })
     }
+})
 
+router.post('/signup',tokenVerification,async (req,res)=>{
+    try {
+        if(req.user.role == 'admin'){
+            const{parentNumber , password } = req.body
+            const {data,error} = await supabase.from('Parents')
+            .insert({'parentNumber': parentNumber,'password':password})
+            .select('*');
+            if(data){return res.send(data)}
+            res.send(error);
+        }
+        res.json({'message':'user cant create new user'})
+    } catch (error) {
+        res.json({'message':'error creating new user'});
+    }
 
 })
 

@@ -3,8 +3,8 @@ import supabase from '../config/db.js'
 
 export const getStudents = async (req, res) => {
     const data = await supabase.from('Students')
-    .select('*')
-    .eq('phoneNumber', req.user.parentNumber)
+        .select('*')
+        .eq('phoneNumber', req.user.parentNumber)
     res.status(200).send(data.data)
 
 
@@ -27,7 +27,7 @@ export const createStudent = async (req, res) => {
     }
 }
 
-export const getStudentsById = async (req, res) => {
+export const getStudentsFee = async (req, res) => {
     try {
         const getId = req.params.id
         const data = await supabase.from('Students')
@@ -44,18 +44,29 @@ export const getStudentsById = async (req, res) => {
 
 export const addStudentFee = async (req, res) => {
     const std_id = req.params.id
-    const { from_month, to_month, year, fee } = req.body
-    const data = await supabase.from('Fees')
-        .insert({
-            std_id: std_id,
-            from_month: from_month,
-            to_month: to_month,
-            year: year,
-            fee: fee
-        })
-        .select('*')
+    try {
+        if (req.user.role = 'admin') {
+            const { from_month, to_month, year, fee } = req.body
+            const {data,error} = await supabase.from('Fees')
+                .insert({
+                    std_id: std_id,
+                    from_month: from_month,
+                    to_month: to_month,
+                    year: year,
+                    fee: fee
+                })
+                .select('*')
+            if(data){
+                return res.send('DATA INSERTED')
+            }
+            res.json({'message':'error adding student Fee'})
+            
+        }
+    } catch (error) {
+        res.json({'message':'Code error at: Adding student Fee at id: '+std_id})
+    }
 
-    res.send('DATA INSERTED :' + data)
+
 }
 
 export const updateStudentFee = (req, res) => {

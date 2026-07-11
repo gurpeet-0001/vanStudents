@@ -30,12 +30,19 @@ export const createStudent = async (req, res) => {
 export const getStudentsFee = async (req, res) => {
     try {
         const getId = req.params.id
-        const data = await supabase.from('Students')
+        const phoneNumber = req.user.parentNumber
+
+        const {data,error} = await supabase.from('Students')
             .select('* , Fees(*)')
             .eq('id', getId)
+            .eq('phoneNumber',phoneNumber)
             .single();
 
-        res.send(data);
+        if(error || data.lenght== 0){
+            return res.json({'message':'No data Found'})
+        }
+        res.status(200).send(data)
+
     } catch (error) {
         res.json({ 'message': 'error fetching students by id :' + error })
     }
@@ -44,8 +51,9 @@ export const getStudentsFee = async (req, res) => {
 
 export const addStudentFee = async (req, res) => {
     const std_id = req.params.id
+    const phoneNumber = req.user.parentNumber
     try {
-        if (req.user.role = 'admin') {
+        if (req.user.role = 'admin' ) {
             const { from_month, to_month, year, fee } = req.body
             const {data,error} = await supabase.from('Fees')
                 .insert({
@@ -57,7 +65,7 @@ export const addStudentFee = async (req, res) => {
                 })
                 .select('*')
             if(data){
-                return res.send('DATA INSERTED')
+                return res.send(token)
             }
             res.json({'message':'error adding student Fee'})
             

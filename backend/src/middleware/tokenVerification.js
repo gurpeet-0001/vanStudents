@@ -10,7 +10,7 @@ const tokenVerification = (req, res, next) => {
         next();
     } catch (error) {
         console.log("wrong token" +error)
-        res.status(404).json({'message':'Wrong or Expired token' })
+        res.status(401).json({'message':'Wrong or Expired token' })
     }
 
 

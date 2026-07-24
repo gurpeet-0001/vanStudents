@@ -1,10 +1,10 @@
-import React from 'react'
-import { Outlet } from 'react-router-dom'
-
+import React from 'react';
+import { Outlet } from 'react-router-dom';
 
 export const Authlayout = () => {
   return (
-      <Outlet/>
-    
-  )
+        <div>
+          <Outlet />
+        </div>
+  );
 }

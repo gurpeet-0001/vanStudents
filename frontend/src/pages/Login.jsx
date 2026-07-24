@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios"
+import api from "../interceptor/axios.jsx"
 import { useNavigate } from 'react-router-dom'
 
 export const Login = () => {
@@ -10,10 +10,10 @@ export const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault()
     try {
-      const response = await axios.post('http://localhost:5001/api/login', { phoneNumber: phoneNumber, password: password });
-      console.log(response.data.message);
-      localStorage.setItem('token', response.data.token);
-      navigate('/');
+      const response = await api.post('/auth/login', { parentNumber: phoneNumber, password: password });
+      console.log(response.data);
+      localStorage.setItem('Authorization', response.data.token);
+      navigate('/students');
       return
     } catch (error) {
       return console.log('error : ' + error);

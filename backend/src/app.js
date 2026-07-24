@@ -1,5 +1,6 @@
 //importing dependencies
 import express from 'express'
+import cors from 'cors'
 //importing files
 import './config/env.js'
 import supabase from './config/db.js'
@@ -11,6 +12,7 @@ const port = process.env.PORT
 
 //middleware
 app.use(express.json());
+app.use(cors());
 
 //routes
 app.use('/api/students/', studentsRoute);

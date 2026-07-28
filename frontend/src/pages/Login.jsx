@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import api from "../interceptor/axios.jsx"
-import { useNavigate } from 'react-router-dom'
+import api from "../middleware/axios.jsx"
+import { replace, useNavigate } from 'react-router-dom'
+import {jwtDecode} from 'jwt-decode'
 
 export const Login = () => {
   const [phoneNumber, setphoneNumber] = useState('');
@@ -13,7 +14,15 @@ export const Login = () => {
       const response = await api.post('/auth/login', { parentNumber: phoneNumber, password: password });
       console.log(response.data);
       localStorage.setItem('Authorization', response.data.token);
-      navigate('/students');
+
+      //now see if the user is admin or not
+      const decoded = jwtDecode(response.data.token)
+      if(decoded.role === 'user'){
+        navigate('/students' );
+      }
+      else{
+        navigate('/admin/students' );
+      }
       return
     } catch (error) {
       return console.log('error : ' + error);

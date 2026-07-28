@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import api from '../interceptor/axios';
+import api from '../middleware/axios';
 
 export default function Fees() {
     const { id } = useParams();

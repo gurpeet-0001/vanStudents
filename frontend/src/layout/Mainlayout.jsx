@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Outlet, Link, useLocation } from "react-router-dom";
-import api from "../interceptor/axios";
+import api from "../middleware/axios";
 import Students from "../userComponents/Students";
 
 export default function MainLayout() {

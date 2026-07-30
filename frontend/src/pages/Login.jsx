@@ -12,7 +12,6 @@ export const Login = () => {
     e.preventDefault()
     try {
       const response = await api.post('/auth/login', { parentNumber: phoneNumber, password: password });
-      console.log(response.data);
       localStorage.setItem('Authorization', response.data.token);
 
       //now see if the user is admin or not

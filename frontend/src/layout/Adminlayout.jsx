@@ -1,47 +1,17 @@
-import React, { useState, useEffect } from "react";
-import { Outlet, Link, useLocation } from "react-router-dom";
-import api from "../middleware/axios";
-
+import React, { useState } from "react";
+import { Outlet, Link } from "react-router-dom";
 
 export default function AdminLayout() {
-  const location = useLocation();
   const [open, setOpen] = useState(false);
-  const [students, setStudents] = useState([]);
-  const [loadingStudents, setLoadingStudents] = useState(false);
-  const [studentsError, setStudentsError] = useState(null);
-
-  useEffect(() => {
-    let mounted = true;
-    const fetchStudents = async () => {
-      setLoadingStudents(true);
-      try {
-        const res = await api.get('/students');
-        if (!mounted) return;
-        // ensure alphabetical order by name
-        const data = Array.isArray(res.data) ? res.data : res.data.students || [];
-        data.sort((a, b) => (a.name || '').toString().localeCompare((b.name || '').toString(), undefined, { sensitivity: 'base' }));
-        setStudents(data);
-      } catch (err) {
-        if (!mounted) return;
-        setStudentsError(err.message || 'Failed to load students');
-      } finally {
-        if (mounted) setLoadingStudents(false);
-      }
-    };
-
-    fetchStudents();
-
-    return () => { mounted = false; };
-  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem('Authorization');
-    window.location.href('/login');
-
-  }
+    window.location.href = '/login';
+  };
   const links = [
     ["All Students", "/admin/students"],
-    ["Create User", "/admin/createuser"],
+    ["Add Student" , "/admin/addstudent"],
+    ["Create Parent", "/admin/createuser"],
   ];
 
   return (
@@ -107,6 +77,6 @@ export default function AdminLayout() {
 
       {/* Content */}
 
-      <Outlet context={{ students, setStudents, loadingStudents, studentsError }} />
+      <Outlet />
     </div>
   )}

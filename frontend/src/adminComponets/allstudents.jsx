@@ -1,11 +1,43 @@
-import React, { useMemo, useState } from 'react'
-import { useOutletContext, useNavigate } from 'react-router-dom'
+import React, { useEffect, useMemo, useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import api from '../middleware/axios'
 
 function Allstudents() {
-  const { students = [], loadingStudents } = useOutletContext();
+  const [students, setStudents] = useState([]);
+  const [loadingStudents, setLoadingStudents] = useState(false);
+  const [studentsError, setStudentsError] = useState(null);
   const [query, setQuery] = useState('');
   const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    let mounted = true;
+
+    const fetchStudents = async () => {
+      setLoadingStudents(true);
+      setStudentsError(null);
+
+      try {
+        const res = await api.get('/students');
+        if (!mounted) return;
+
+        const data = Array.isArray(res.data) ? res.data : res.data.students || [];
+        data.sort((a, b) => (a.name || '').toString().localeCompare((b.name || '').toString(), undefined, { sensitivity: 'base' }));
+        setStudents(data);
+      } catch (err) {
+        if (!mounted) return;
+        setStudentsError(err.message || 'Failed to load students');
+      } finally {
+        if (mounted) setLoadingStudents(false);
+      }
+    };
+
+    fetchStudents();
+
+    return () => {
+      mounted = false;
+    };
+  }, [location.key]);
 
   const filtered = useMemo(() => {
     const q = (query || '').trim().toLowerCase();
@@ -42,7 +74,9 @@ function Allstudents() {
 
       {loadingStudents && <div className="text-gray-600">Loading students...</div>}
 
-      {!loadingStudents && filtered.length === 0 && (
+      {studentsError && <div className="text-red-500">{studentsError}</div>}
+
+      {!loadingStudents && !studentsError && filtered.length === 0 && (
         <div className="text-gray-500">No students found.</div>
       )}
 

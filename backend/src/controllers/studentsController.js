@@ -22,21 +22,47 @@ export const getStudents = async (req, res) => {
 }
 
 export const createStudent = async (req, res) => {
-        try {
-            if (req.user.role == 'admin') {
-                const { phoneNumber, password } = req.body;
-                const { data, error } = await supabase.from('Students')
-                    .insert({
-                        'phoneNumber': phoneNumber,
-                        'password': password
-                    })
-                return res.status(200).json({ 'message': 'User Created successfully' })
-            }
-            res.status(404).json({ 'message': 'Wrong Role, Only admin can create new user' })
-        } catch (error) {
-            return res.status(404).json({ 'message': 'Error creating User : ' + error })
+    try {
+        if (req.user.role !== "admin") {
+            return res.status(403).json({
+                message: "Wrong Role, Only admin can create new user",
+            });
         }
+
+        const { phoneNumber, std_name } = req.body;
+
+        const { data, error } = await supabase
+            .from("Students")
+            .insert([
+                {
+                    phoneNumber,
+                    std_name,
+                },
+            ])
+            .select();
+
+        if (error) {
+            console.error("Supabase Insert Error:", error);
+
+            return res.status(500).json({
+                message: error.message,
+                error,
+            });
+        }
+
+        return res.status(201).json({
+            message: "Student created successfully",
+            data,
+        });
+    } catch (error) {
+        console.error("Server Error:", error);
+
+        return res.status(500).json({
+            message: "Error creating user",
+            error: error.message,
+        });
     }
+};
 
     export const getStudentsFee = async (req, res) => {
         try {

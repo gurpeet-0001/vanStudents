@@ -4,6 +4,24 @@ import supabase from '../config/db.js'
 import tokenVerification from "../middleware/tokenVerification.js";
 const router = Router();
 
+router.get('/', tokenVerification, async(req,res)=>{
+    try {
+        if(req.user.role == 'admin'){
+            const {data,error} = await supabase.from('Parents')
+            .select('*')
+
+            if(error){
+                return res.json({'message':'Error fetching Parent Numbers'})
+            }else{
+                return res.send(data)
+            }
+        }
+    } catch (error) {
+        return res.json({'message':'Code error fetching parent numbers : '+error})
+    }
+})
+
+
 router.post('/login', async (req, res) => {
     try {
         const { parentNumber, password } = req.body

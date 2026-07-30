@@ -22,7 +22,6 @@ api.interceptors.response.use((res) => {
         localStorage.removeItem('Authorization');
         window.location.href = '/login';
     }
-
     return Promise.reject(error);
 });
 

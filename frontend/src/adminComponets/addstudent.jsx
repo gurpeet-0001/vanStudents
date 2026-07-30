@@ -1,21 +1,21 @@
 import React, { useState } from "react";
 import api from "../middleware/axios.jsx";
 
-function CreateUser() {
-  const [parentNumber, setParentNumber] = useState("");
-  const [password, setPassword] = useState("");
+function AddStudent() {
+  const [stdName, setStdName] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [message, setMessage] = useState({ type: "", text: "" });
   const [loading, setLoading] = useState(false);
 
-  const handleParentNumberChange = (e) => {
+  const handlePhoneChange = (e) => {
     const value = e.target.value.replace(/\D/g, "").slice(0, 10);
-    setParentNumber(value);
+    setPhoneNumber(value);
   };
 
-  const handleCreateUser = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (parentNumber.length !== 10) {
+    if (phoneNumber.length !== 10) {
       setMessage({ type: "error", text: "Phone number must be exactly 10 digits" });
       return;
     }
@@ -24,21 +24,21 @@ function CreateUser() {
     setMessage({ type: "", text: "" });
 
     try {
-      const response = await api.post("/auth/signup", {
-        parentNumber,
-        password,
+      const response = await api.post("/students/", {
+        std_name: stdName,
+        phoneNumber,
       });
 
       setMessage({
         type: "success",
-        text: response.data?.message || "User created successfully",
+        text: response.data?.message || "Student added successfully",
       });
-      setParentNumber("");
-      setPassword("");
+      setStdName("");
+      setPhoneNumber("");
     } catch (error) {
       setMessage({
         type: "error",
-        text: error.response?.data?.message || "Failed to create user",
+        text: error.response?.data?.message || "Failed to add student",
       });
     } finally {
       setLoading(false);
@@ -46,22 +46,19 @@ function CreateUser() {
   };
 
   return (
-    <div className="max-w-md mx-auto">
-      <div className="mb-6">
-        <h2 className="text-2xl font-semibold text-gray-800">Create New Parent</h2>
-      </div>
+    <div className="max-w-md mx-auto p-4">
+      <h2 className="text-2xl font-semibold text-gray-800 mb-4">Add Student</h2>
 
-      <form onSubmit={handleCreateUser} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label className="block mb-2 text-sm font-medium text-gray-700">
-            Phone Number
+            Student Name
           </label>
           <input
-            type="tel"
-            value={parentNumber}
-            onChange={handleParentNumberChange}
-            placeholder="Enter phone number"
-            maxLength={10}
+            type="text"
+            value={stdName}
+            onChange={(e) => setStdName(e.target.value)}
+            placeholder="Enter student name"
             className="w-full border border-gray-300 rounded-lg px-4 py-2 outline-none focus:ring-2 focus:ring-blue-500"
             required
           />
@@ -69,13 +66,14 @@ function CreateUser() {
 
         <div>
           <label className="block mb-2 text-sm font-medium text-gray-700">
-            Password
+            Parent Phone Number
           </label>
           <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Enter password"
+            type="tel"
+            value={phoneNumber}
+            onChange={handlePhoneChange}
+            placeholder="Enter parent phone number"
+            maxLength={10}
             className="w-full border border-gray-300 rounded-lg px-4 py-2 outline-none focus:ring-2 focus:ring-blue-500"
             required
           />
@@ -86,7 +84,7 @@ function CreateUser() {
           disabled={loading}
           className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-200 disabled:opacity-60"
         >
-          {loading ? "Creating..." : "Create User"}
+          {loading ? "Saving..." : "Add Student"}
         </button>
       </form>
 
@@ -105,4 +103,4 @@ function CreateUser() {
   );
 }
 
-export default CreateUser;
+export default AddStudent;

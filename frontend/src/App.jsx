@@ -14,6 +14,7 @@ import Adminlayout from "./layout/Adminlayout"
 import AllStudents  from "./adminComponets/allstudents.jsx"
 import CreateUser  from "./adminComponets/createUser.jsx"
 import EditStudents from "./adminComponets/EditStudents.jsx"
+import AddStudent from "./adminComponets/addstudent.jsx"
 
 export const App = () => {
 
@@ -37,6 +38,7 @@ export const App = () => {
             <Route path="/admin/students" element={<AllStudents />}></Route>
             <Route path="/admin/students/:id" element={<EditStudents />}></Route>
             <Route path="/admin/createuser" element={<CreateUser />}></Route>
+            <Route path="/admin/addstudent" element={<AddStudent/>}></Route>
           </Route>
         </Route>
 
